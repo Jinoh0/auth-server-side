@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const UserModel = require("../models/User.model");
 
 const generateToken = require("../config/jwt.config");
+const isAuth = require("../middlewares/isAuth");
+const attachCurrentUser = require("../middlewares/attachCurrentUser");
 
 const saltRounds = 10;
 
@@ -60,6 +62,10 @@ router.post("/login", async (req, res) => {
     console.log(error);
     return res.status(500).json(error);
   }
+});
+
+router.get("/profile", isAuth, attachCurrentUser, (req, res) => {
+  return res.status(200).json(req.currentUser);
 });
 
 module.exports = router;
