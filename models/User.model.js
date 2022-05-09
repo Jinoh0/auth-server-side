@@ -11,6 +11,8 @@ const userSchema = new Schema({
   },
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ["ADMIN", "USER"], default: "USER" },
+  isActive: { type: Boolean, default: true },
+  disabledOn: { type: Date },
 });
 
 const UserModel = model("User", userSchema);

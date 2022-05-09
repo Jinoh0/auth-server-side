@@ -5,6 +5,7 @@ const UserModel = require("../models/User.model");
 const generateToken = require("../config/jwt.config");
 const isAuth = require("../middlewares/isAuth");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
+const isAdmin = require("../middlewares/isAdmin");
 
 const saltRounds = 10;
 
@@ -67,5 +68,48 @@ router.post("/login", async (req, res) => {
 router.get("/profile", isAuth, attachCurrentUser, (req, res) => {
   return res.status(200).json(req.currentUser);
 });
+
+router.patch("/update-profile", isAuth, attachCurrentUser, async (req, res) => {
+  try {
+    const loggedInUser = req.currentUser;
+
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: loggedInUser._id },
+      { ...req.body },
+      { runValidators: true, new: true }
+    );
+
+    delete updatedUser._doc.passwordHash;
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+});
+
+//SOFT DELETE
+
+router.delete(
+  "/disable-profile",
+  isAuth,
+  attachCurrentUser,
+  async (req, res) => {
+    try {
+      const disabledUser = await UserModel.findOneAndUpdate(
+        { _id: req.currentUser._id },
+        { isActive: false, disableOn: Date.now() },
+        { runValidators: true, new: true }
+      );
+
+      delete disabledUser._doc.passwordHash;
+
+      return res.status(200).json(disabledUser);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error);
+    }
+  }
+);
 
 module.exports = router;
