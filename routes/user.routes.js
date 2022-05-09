@@ -98,7 +98,7 @@ router.delete(
     try {
       const disabledUser = await UserModel.findOneAndUpdate(
         { _id: req.currentUser._id },
-        { isActive: false, disableOn: Date.now() },
+        { isActive: false, disabledOn: Date.now() },
         { runValidators: true, new: true }
       );
 
