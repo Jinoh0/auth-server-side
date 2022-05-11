@@ -10,6 +10,7 @@ const userSchema = new Schema({
     match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
   },
   passwordHash: { type: String, required: true },
+  img: { type: String },
   role: { type: String, enum: ["ADMIN", "USER"], default: "USER" },
   isActive: { type: Boolean, default: true },
   disabledOn: { type: Date },
