@@ -1,4 +1,4 @@
-# API RESTful template
+# API RESTful template + Token Based Auth
 
 Template para construção de APIs utilizando Node, Express, JWT e Mongoose.
 
